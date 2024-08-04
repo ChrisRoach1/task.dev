@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import {Head, Link, useForm, usePage} from '@inertiajs/vue3';
+import {Head, useForm, usePage} from '@inertiajs/vue3';
 import { Activity, ArrowUpRight, CreditCard, DollarSign, Users } from 'lucide-vue-next'
 import { Button } from '@/Components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
 import {Note, Task} from "@/types";
 import {Input} from "@/Components/ui/input";
-import {Label} from "@/Components/ui/label";
 import InputError from "@/Components/InputError.vue";
 import {TrashIcon} from "@radix-icons/vue";
-import { router } from '@inertiajs/vue3'
 import { Textarea } from '@/Components/ui/textarea'
 import {debounce} from 'lodash'
 
@@ -36,9 +34,6 @@ const deleteForm = useForm({
 });
 
 const debounceNoteUpdate = debounce(() =>{
-    console.log(notesForm.content);
-    console.log('hello');
-
     notesForm.patch(route('note.update'));
 
 }, 1000);

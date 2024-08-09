@@ -1,21 +1,25 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import {Head, useForm, usePage} from '@inertiajs/vue3';
-import { Activity, ArrowUpRight, CreditCard, DollarSign, Users } from 'lucide-vue-next'
+import { Activity, ArrowUpRight, CreditCard, DollarSign, Users, CircleCheck } from 'lucide-vue-next'
 import { Button } from '@/Components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
 import {Note, Task} from "@/types";
 import {Input} from "@/Components/ui/input";
 import InputError from "@/Components/InputError.vue";
-import {TrashIcon} from "@radix-icons/vue";
+import {CheckIcon} from "@radix-icons/vue";
 import { Textarea } from '@/Components/ui/textarea'
-import {debounce} from 'lodash'
+import { debounce } from 'lodash-es';
+import Echo from "laravel-echo";
+import echo from "@/echo";
+import {ref} from "vue";
 
-
-defineProps<{
+let props = defineProps<{
     tasks?: Task[];
     notes?: Note;
+    tasksCompleted: number;
+    totalUsers: number;
 }>();
 
 
@@ -23,10 +27,11 @@ const form = useForm({
     taskName: ""
 });
 
+const tasksCompletedCount = ref(props.tasksCompleted);
 
 const notesForm = useForm({
-    id: usePage().props.notes?.id,
-    content: usePage().props.notes?.content
+    id: props.notes?.id,
+    content: props.notes?.content
 });
 
 const deleteForm = useForm({
@@ -43,6 +48,10 @@ function deleteTask(taskID: number){
 
     deleteForm.delete(route('task.destroy'), {preserveScroll: true});
 }
+
+echo.channel('task-completed').listen('TaskCompleted', (e: any) =>{
+    tasksCompletedCount.value++;
+});
 
 </script>
 
@@ -61,65 +70,27 @@ function deleteTask(taskID: number){
             <Card>
                 <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle class="text-sm font-medium">
-                        Total Revenue
+                        Total Tasks Completed Across All Users
                     </CardTitle>
-                    <DollarSign class="h-4 w-4 text-muted-foreground" />
+                    <CircleCheck class="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                     <div class="text-2xl font-bold">
-                        $45,231.89
+                        {{ tasksCompletedCount }}
                     </div>
-                    <p class="text-xs text-muted-foreground">
-                        +20.1% from last month
-                    </p>
                 </CardContent>
             </Card>
             <Card>
                 <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle class="text-sm font-medium">
-                        Subscriptions
+                        Total Users
                     </CardTitle>
                     <Users class="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                     <div class="text-2xl font-bold">
-                        +2350
+                        {{ props.totalUsers }}
                     </div>
-                    <p class="text-xs text-muted-foreground">
-                        +180.1% from last month
-                    </p>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle class="text-sm font-medium">
-                        Sales
-                    </CardTitle>
-                    <CreditCard class="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                    <div class="text-2xl font-bold">
-                        +12,234
-                    </div>
-                    <p class="text-xs text-muted-foreground">
-                        +19% from last month
-                    </p>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle class="text-sm font-medium">
-                        Active Now
-                    </CardTitle>
-                    <Activity class="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                    <div class="text-2xl font-bold">
-                        +573
-                    </div>
-                    <p class="text-xs text-muted-foreground">
-                        +201 since last hour
-                    </p>
                 </CardContent>
             </Card>
         </div>
@@ -130,7 +101,7 @@ function deleteTask(taskID: number){
                         <CardTitle>Tasks</CardTitle>
                     </div>
                     <Button as-child size="sm" class="ml-auto gap-1">
-                        <a href="#">
+                        <a :href="route('tasks')">
                             View All
                             <ArrowUpRight class="h-4 w-4" />
                         </a>
@@ -186,8 +157,8 @@ function deleteTask(taskID: number){
                                     </div>
                                 </TableCell>
                                 <TableCell class="float-end">
-                                    <Button @click="deleteTask(task.id)">
-                                        <TrashIcon class="w-4 h-4" />
+                                    <Button variant="ghost" @click="deleteTask(task.id)">
+                                        <CheckIcon class="w-4 h-4" />
                                     </Button>
 
                                 </TableCell>
@@ -197,22 +168,31 @@ function deleteTask(taskID: number){
                 </CardContent>
             </Card>
             <Card>
-                <CardHeader>
+                <CardHeader class="flex flex-row items-center">
                     <div class="flex flex-row space-x-3 items-center">
                         <CardTitle>Recent Notes</CardTitle>
                         <Transition
                             enter-active-class="transition ease-in-out"
                             enter-from-class="opacity-0"
                             leave-active-class="transition ease-in-out"
-                            leave-to-class="opacity-0"
-                        >
+                            leave-to-class="opacity-0">
                             <p v-if="notesForm.recentlySuccessful" class="text-sm text-gray-600">Saved.</p>
                         </Transition>
                     </div>
-
+                    <Button as-child size="sm" class="ml-auto gap-1">
+                        <a :href="route('tasks')">
+                            View All
+                            <ArrowUpRight class="h-4 w-4" />
+                        </a>
+                    </Button>
                 </CardHeader>
-                <CardContent class="grid gap-8">
-                    <Textarea v-model="notesForm.content" @input="debounceNoteUpdate"/>
+                <CardContent class="grid gap-8 ">
+                    <Textarea
+                        v-model="notesForm.content" @input="debounceNoteUpdate"
+                        id="message"
+                        placeholder="Type your notes here..."
+                        class="min-h-12 border-0 p-3 shadow-none focus-visible:ring-0"
+                    />
                 </CardContent>
             </Card>
         </div>

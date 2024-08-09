@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TaskCompleted;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Task;
 use Illuminate\Auth\Events\PasswordReset;
@@ -65,6 +66,8 @@ class TaskController extends Controller
            'completed'=>true,
            'completed_at'=>now()
         ]);
+
+        TaskCompleted::dispatch("completed");
 
         return Redirect::to('dashboard');
     }

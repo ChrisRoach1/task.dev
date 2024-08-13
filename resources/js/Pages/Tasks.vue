@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import {Head, useForm, usePage} from '@inertiajs/vue3';
+import {Head, usePage} from '@inertiajs/vue3';
 import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from '@/Components/ui/table'
 import {Task} from "@/types";
 import {Badge} from "@/Components/ui/badge";
 import moment from 'moment';
-import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuItem,DropdownMenuLabel,DropdownMenuSeparator, DropdownMenuCheckboxItem} from "@/Components/ui/dropdown-menu";
+import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuLabel,DropdownMenuSeparator, DropdownMenuCheckboxItem} from "@/Components/ui/dropdown-menu";
 import {ListFilter,Search} from "lucide-vue-next";
 import {Button} from "@/Components/ui/button";
 import { router } from '@inertiajs/vue3'
@@ -22,9 +22,6 @@ let props = defineProps<{
 
 let searchString = ref(props.searchString);
 
-const form = useForm({
-    taskName: ""
-});
 type Checked = DropdownMenuCheckboxItemProps['checked']
 
 const allChecked = ref<Checked>(props.currentView == 'all' || props.currentView == null)

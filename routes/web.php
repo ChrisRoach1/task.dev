@@ -41,9 +41,19 @@ Route::get('/tasks', function () {
     ]);
 })->middleware(['auth', 'verified'])->name('tasks');
 
-Route::get('/example', function () {
-    return Inertia::render('ExampleDashboard');
-})->middleware(['auth', 'verified'])->name('example');
+
+Route::get('/notes', function () {
+    return Inertia::render('Notes', [
+        'notes' => auth()->user()->notes()->when(Request::input('dateFilter'), function ($query, $view){
+            $query->whereDate('created_at', '=', Request::input('dateFilter'));
+        })->when(Request::input('searchString'), function($query, $searchString){
+            $query->where('content', 'like', "%{$searchString}%");
+        })->get(),
+        'dateFilter' => Request::input('dateFilter'),
+        'searchString' => Request::input('searchString'),
+    ]);
+})->middleware(['auth', 'verified'])->name('notes');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

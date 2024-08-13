@@ -180,7 +180,7 @@ echo.channel('task-completed').listen('TaskCompleted', (e: any) =>{
                         </Transition>
                     </div>
                     <Button as-child size="sm" class="ml-auto gap-1">
-                        <a :href="route('tasks')">
+                        <a :href="route('notes')">
                             View All
                             <ArrowUpRight class="h-4 w-4" />
                         </a>

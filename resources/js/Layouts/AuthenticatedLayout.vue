@@ -12,7 +12,7 @@ import {Button} from "@/Components/ui/button";
             <div class="flex h-full max-h-screen flex-col gap-2">
                 <div class="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
                     <a href="/" class="flex items-center gap-2 font-semibold">
-                        <span class="">Task.dev</span>
+                        <span class="">TaskTrack.dev</span>
                     </a>
                 </div>
                 <div class="flex-1">
@@ -45,7 +45,7 @@ import {Button} from "@/Components/ui/button";
                     <SheetContent side="left" class="flex flex-col">
                         <nav class="grid gap-2 text-lg font-medium">
                             <a href="#" class="flex items-center gap-2 text-lg font-semibold">
-                                <span>Task.dev</span>
+                                <span>TaskTrack.dev</span>
                             </a>
                             <a :href="route('dashboard')" class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground" :class="{'bg-muted': route().current('dashboard')}">
                                 <Home class="h-5 w-5" />

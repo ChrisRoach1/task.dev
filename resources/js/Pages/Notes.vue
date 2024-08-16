@@ -43,7 +43,7 @@ const df = new DateFormatter('en-US', {
 
 const dateValue = ref<DateValue>();
 const showModal = ref(false);
-const currentlyViewedNote = ref<Note>(null);
+const currentlyViewedNote = ref<Note | null>(null);
 
 watch(searchString, (value) =>{
     loadData(dateValue.value, value);
@@ -138,7 +138,7 @@ function loadData(dateFilter: DateValue | undefined, searchString: string | null
 
         <Modal :show="showModal" @close="closeModal">
             <div class="p-6">
-                {{currentlyViewedNote.content}}
+                {{currentlyViewedNote?.content}}
             </div>
         </Modal>
 

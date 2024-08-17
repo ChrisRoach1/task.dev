@@ -44,13 +44,8 @@ const debounceNoteUpdate = debounce(() =>{
 function deleteTask(taskID: number){
     deleteForm.id = taskID;
 
-    deleteForm.delete(route('task.destroy'), {preserveScroll: true});
+    deleteForm.delete(route('task.destroy'), {preserveScroll: true,replace: true, preserveState:false });
 }
-
-
-window.Echo.channel('task-completed').listen('TaskCompleted', (e: any) =>{
-    tasksCompletedCount.value++;
-});
 
 </script>
 

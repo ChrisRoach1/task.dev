@@ -67,7 +67,7 @@ class TaskController extends Controller
            'completed_at'=>now()
         ]);
 
-        TaskCompleted::dispatch("completed");
+//        TaskCompleted::dispatch("completed");
 
         return Redirect::to('dashboard');
     }

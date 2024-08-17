@@ -12,7 +12,6 @@ import {CheckIcon} from "@radix-icons/vue";
 import { Textarea } from '@/Components/ui/textarea'
 import { debounce } from 'lodash-es';
 import {ref} from "vue";
-import echo from "@/echo";
 
 let props = defineProps<{
     tasks?: Task[];

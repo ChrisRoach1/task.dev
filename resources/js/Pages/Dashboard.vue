@@ -48,7 +48,8 @@ function deleteTask(taskID: number){
     deleteForm.delete(route('task.destroy'), {preserveScroll: true});
 }
 
-echo.channel('task-completed').listen('TaskCompleted', (e: any) =>{
+
+window.Echo.channel('task-completed').listen('TaskCompleted', (e: any) =>{
     tasksCompletedCount.value++;
 });
 
